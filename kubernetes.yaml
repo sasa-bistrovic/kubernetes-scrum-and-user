@@ -1,0 +1,595 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+data:
+  postgresql.conf: |
+    # PostgreSQL configuration file
+    #
+    # This file consists of lines of the form:
+    #
+    #   name = value
+    #
+    # (The "=" is optional.)  Whitespace may be used.  Comments are introduced with
+    # "#" anywhere on a line.  The complete list of parameter names and allowed
+    # values can be found in the PostgreSQL documentation.
+
+    #------------------------------------------------------------------------------
+    # FILE LOCATIONS
+    #------------------------------------------------------------------------------
+
+    data_directory = '/var/lib/postgresql/data'
+    hba_file = '/etc/postgresql/pg_hba.conf'
+    ident_file = '/etc/postgresql/pg_ident.conf'
+
+    #------------------------------------------------------------------------------
+    # CONNECTIONS AND AUTHENTICATION
+    #------------------------------------------------------------------------------
+
+    # - Connection Settings -
+
+    listen_addresses = '*'          # what IP address(es) to listen on;
+                                    # comma-separated list of addresses;
+                                    # defaults to 'localhost'; use '*' for all
+                                    # (change requires restart)
+    port = 5432                     # (change requires restart)
+    max_connections = 100           # (change requires restart)
+    #superuser_reserved_connections = 3 # (change requires restart)
+    #unix_socket_directories = '/var/run/postgresql' # comma-separated list of directories
+
+    # - Security and Authentication -
+
+    #authentication_timeout = 1min  # 1s-600s
+    ssl = on                        # (change requires restart)
+    #ssl_cert_file = '/etc/ssl/certs/ssl-cert-snakeoil.pem' # (change requires restart)
+    #ssl_key_file = '/etc/ssl/private/ssl-cert-snakeoil.key' # (change requires restart)
+    #ssl_ca_file = '/etc/ssl/certs/ca-certificates.crt'  # (change requires restart)
+    #ssl_ciphers = 'HIGH:MEDIUM:+3DES:!aNULL' # allowed SSL ciphers
+    #ssl_prefer_server_ciphers = on     # (change requires restart)
+    #ssl_ecdh_curve = 'prime256v1'      # (change requires restart)
+    #ssl_min_protocol_version = 'TLSv1.2'  # (change requires restart)
+    #ssl_max_protocol_version = 'TLSv1.3'  # (change requires restart)
+    #ssl_dh_params_file = ''            # (change requires restart)
+    #ssl_passphrase_command = ''        # (change requires restart)
+    #ssl_passphrase_command_supports_reload = off  # (change requires restart)
+    #ssl_passphrase_command_supports_reload = off  # (change requires restart)
+
+    #------------------------------------------------------------------------------
+    # QUERY TUNING
+    #------------------------------------------------------------------------------
+
+    # - Planner Method Configuration -
+
+    #enable_bitmapscan = on
+    #enable_hashagg = on
+    #enable_hashjoin = on
+    #enable_indexscan = on
+    #enable_indexonlyscan = on
+    #enable_material = on
+    #enable_mergejoin = on
+    #enable_nestloop = on
+    #enable_parallel_append = on
+    #enable_parallel_hash = on
+    #enable_partitionwise_aggregate = off
+    #enable_partitionwise_join = off
+    #enable_seqscan = on
+    #enable_sort = on
+    #enable_tidscan = on
+
+    # - Planner Cost Constants -
+
+    #seq_page_cost = 1.0            # measured on an arbitrary scale
+    #random_page_cost = 4.0         # same scale as above
+    #cpu_tuple_cost = 0.01          # same scale as above
+    #cpu_index_tuple_cost = 0.005   # same scale as above
+    #cpu_operator_cost = 0.0025     # same scale as above
+    #parallel_tuple_cost = 0.1      # same scale as above
+    #parallel_setup_cost = 1000.0   # same scale as above
+
+    #------------------------------------------------------------------------------
+    # ERROR REPORTING AND LOGGING
+    #------------------------------------------------------------------------------
+
+    # - Where to Log -
+
+    log_destination = 'stderr'          # Valid values are combinations of
+                                        # stderr, csvlog, syslog, and eventlog,
+                                        # depending on platform.  csvlog
+                                        # requires logging_collector to be on.
+
+    # This is used when logging to stderr:
+    logging_collector = on              # Enable capturing of stderr and csvlog
+                                        # into log files. Required to be on for
+                                        # csvlogs.
+                                        # (change requires restart)
+
+    # These are only used if logging_collector is on:
+    log_directory = 'pg_log'            # directory where log files are written,
+                                        # can be absolute or relative to PGDATA
+    #log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'  # log file name pattern,
+                                        # can include strftime() escapes
+    #log_file_mode = 0600                # creation mode for log files,
+                                        # begin with 0 to use octal notation
+    #log_truncate_on_rotation = off      # If on, an existing log file with the
+                                        # same name as the new log file will be
+                                        # truncated rather than appended to.
+                                        # But such truncation only occurs on
+                                        # time-driven rotation, not on restarts
+                                        # or size-driven rotation.  Default is
+                                        # off, meaning append to existing files
+                                        # in all cases.
+    #log_rotation_age = 1d               # Automatic rotation of logfiles will
+                                        # happen after that time.  0 disables.
+    #log_rotation_size = 10MB            # Automatic rotation of logfiles will
+                                        # happen after that much log output.
+                                        # 0 disables.
+
+    # These are relevant when logging to syslog:
+    #syslog_facility = 'LOCAL0'
+    #syslog_ident = 'postgres'
+    #syslog_sequence_numbers = on
+    #syslog_split_messages = on
+
+    # - What to Log -
+
+    #client_min_messages = notice       # values in order of decreasing detail:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   log
+                                        #   notice
+                                        #   warning
+                                        #   error
+
+    #log_min_messages = warning         # values in order of decreasing detail:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   info
+                                        #   notice
+                                        #   warning
+                                        #   error
+                                        #   log
+                                        #   fatal
+                                        #   panic
+
+    #log_min_error_statement = error    # values in order of increasing severity:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   info
+                                        #   notice
+                                        #   warning
+                                        #   error
+                                        #   log
+                                        #   fatal
+                                        #   panic (effectively off)
+
+    #log_min_duration_statement = -1     # -1 is disabled, 0 logs all statements
+                                        # and their durations, > 0 logs only
+                                        # statements running at least this number
+                                        # of milliseconds
+
+    #silent_mode = off                   # DO NOT USE without syslog or
+                                        # logging_collector
+                                        # (change requires restart)
+
+    # - What to Log -
+    #client_min_messages = notice       # values in order of decreasing detail:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   log
+                                        #   notice
+                                        #   warning
+                                        #   error
+                                        #   fatal
+                                        #   panic (effectively off)
+
+    #log_min_messages = warning         # values in order of decreasing detail:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   info
+                                        #   notice
+                                        #   warning
+                                        #   error
+                                        #   log
+                                        #   fatal
+                                        #   panic
+
+    #log_min_error_statement = error    # values in order of increasing severity:
+                                        #   debug5
+                                        #   debug4
+                                        #   debug3
+                                        #   debug2
+                                        #   debug1
+                                        #   info
+                                        #   notice
+                                        #   warning
+                                        #   error
+                                        #   log
+                                        #   fatal
+                                        #   panic (effectively off)
+
+    #log_min_duration_statement = -1     # -1 is disabled, 0 logs all statements
+                                        # and their durations, > 0 logs only
+                                        # statements running at least this number
+                                        # of milliseconds
+
+    #log_checkpoints = off
+    #log_connections = off
+    #log_disconnections = off
+    #log_duration = off
+    #log_error_verbosity = default      # terse, default, or verbose messages
+    #log_hostname = off
+    #log_line_prefix = ''               # special values:
+                                        #   %a = application name
+                                        #   %u = user name
+                                        #   %d = database name
+                                        #   %r = remote host and port
+                                        #   %h = remote host
+                                        #   %p = process ID
+                                        #   %t = timestamp without milliseconds
+                                        #   %m = timestamp with milliseconds
+                                        #   %i = command tag
+                                        #   %e = SQL state
+                                        #   %c = session ID
+                                        #   %l = session line number
+                                        #   %s = session start timestamp
+                                        #   %v = virtual transaction ID
+                                        #   %x = transaction ID (0 if none)
+                                        #   %q = stop here in non-session
+                                        #        processes
+                                        #   %% = '%'
+                                        # e.g. '<%u%%%d> '
+    #log_lock_waits = off               # log lock waits >= deadlock_timeout
+    #log_statement = 'none'             # none, ddl, mod, all
+                                        # none - statements are not logged
+                                        # ddl - only data definition statements
+                                        #       (create/alter/drop/truncate)
+                                        # mod - ddl plus data-modifying
+                                        #       statements (insert/update/delete)
+                                        # all - all statements
+                                        # (change requires restart)
+    #log_replication_commands = off
+    #log_temp_files = -1                # log temporary files equal or larger
+                                        # than the specified size in kilobytes;
+                                        # -1 disables, 0 logs all temp files
+    #log_timezone = '(defaults to server environment setting)' # actually, defaults to TZ environment
+                                        # setting (abbreviation TZ), but if TZ
+                                        # is not set, falls back to
+                                        # "DEFAULT_TIMEZONE" environment
+                                        # variable, and if that's not set, falls
+                                        # back to the timezone specified during
+                                        # initdb
+    #log_statement_stats = off
+
+    #log_directory = '/var/log/postgresql' # directory where log files are written,
+                                          # can be absolute or relative to PGDATA
+    #log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log' # log file name pattern,
+                                          # can include strftime() escapes
+    #log_file_mode = 0600               # creation mode for log files,
+                                          # begin with 0 to use octal notation
+    #log_truncate_on_rotation = off     # If on, an existing log file with the
+                                          # same name as the new log file will be
+                                          # truncated rather than appended to.
+                                          # But such truncation only occurs on
+                                          # time-driven rotation, not on restarts
+                                          # or size-driven rotation.  Default is
+                                          # off, meaning append to existing files
+                                          # in all cases.
+    #log_rotation_age = 1d              # Automatic rotation of logfiles will
+                                          # happen after that time.  0 disables.
+    #log_rotation_size = 0              # Automatic rotation of logfiles will
+                                          # happen after that much log output.
+                                          # 0 disables.
+    #debug_print_parse = off
+    #debug_print_rewritten = off
+    #debug_print_plan = off
+    #debug_pretty_print = on
+    #log_checkpoints = off
+    #log_connections = off
+    #log_disconnections = off
+    #log_duration = off
+    #log_error_verbosity = default
+    #log_hostname = off
+    #log_line_prefix = '%m [%p] %q%u@%d ' # special values:
+                                          #   %m = timestamp with milliseconds
+                                          #   %u = username
+                                          #   %p = process ID
+                                          #   %d = database name
+                                          #   %r = remote host and port
+                                          #   %h = remote host
+                                          #   %c = session ID
+                                          #   %l = session line number
+                                          #   %s = session start timestamp
+                                          #   %v = virtual transaction ID
+                                          #   %x = transaction ID (0 if none)
+                                          #   %q = stop here in non-session
+                                          #        processes
+                                          #   %% = '%'
+    #log_lock_waits = off
+    #log_statement = 'none'
+    #log_replication_commands = off
+    #log_temp_files = -1
+    #log_timezone = '(defaults to server environment setting)'
+    #log_statement_stats = off
+
+  pg_hba.conf: |
+    # PostgreSQL Client Authentication Configuration File
+    # ===================================================
+
+    # Refer to the "Client Authentication" section in the PostgreSQL
+    # documentation for a complete description of this file.  A short
+    # synopsis follows.
+
+    # This file controls: which hosts are allowed to connect, how clients
+    # are authenticated, which PostgreSQL user names they can use, which
+    # databases they can access.  Records take one of these forms:
+    #
+    # local      DATABASE  USER  METHOD  [OPTIONS]
+    # host       DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+    # hostssl    DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+    # hostnossl  DATABASE  USER  ADDRESS  METHOD  [OPTIONS]
+    #
+    # (The uppercase items must be replaced by actual values.)
+    #
+    # The first field is the connection type: "local" is a Unix-domain socket,
+    # "host" is either a plain or SSL-encrypted TCP/IP socket, "hostssl" is an
+    # SSL-encrypted TCP/IP socket, and "hostnossl" is a plain TCP/IP socket.
+    #
+    # DATABASE can be "all", "sameuser", "samerole", "replication", a
+    # database name, or a comma-separated list thereof. The "all" keyword does
+    # not match "replication". Access to replication must be enabled in a
+    # separate record (see example below).
+    #
+    # USER can be "all", a user name, a group name prefixed with "+", or a comma-
+    # separated list thereof.  In both the DATABASE and USER fields you can
+    # also write a file name prefixed with "@" to include names from a separate
+    # file.
+    #
+    # ADDRESS specifies the set of hosts the record matches.  It can be a host
+    # name, or it is made up of an IP address and a CIDR mask that is an integer
+    # (between 0 and 32 (IPv4) or 128 (IPv6) inclusive) that specifies the number
+    # of significant bits in the mask.  A host name that starts with a dot (.)
+    # means a suffix match. A separate file contains host name-to-address mappings.
+    #
+    # METHOD can be "trust", "reject", "md5", "password", "scram-sha-256",
+    # "gss", "sspi", "ident", "peer", "pam", "ldap", "radius" or "cert".  Note
+    # that "password" sends passwords in clear text; "md5" or "scram-sha-256"
+    # should be used for password-based authentication (MD5 is preferred for
+    # historical reasons).  "trust" does no authentication, and should not be
+    # used.  "peer" authentication is only available on operating systems
+    # providing the necessary PAM or ident support.
+    #
+    # OPTIONS are a set of options for the authentication in the format
+    # NAME=VALUE.  The available options depend on the different authentication
+    # methods -- refer to the "Client Authentication" section in the
+    # documentation for a list of which options are available for which
+    # authentication methods.
+
+    # Database administrative login by Unix domain socket
+    local   all             scrum-user-postgres                     peer
+
+    # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
+    # "local" is for Unix domain socket connections only
+    local   all             all                                     trust
+    # IPv4 local connections:
+    host    all             all             127.0.0.1/32            trust
+    # IPv6 local connections:
+    host    all             all             ::1/128                 trust
+    # Allow replication connections from localhost, by a user with the
+    # replication privilege.
+    local   replication     all                                     trust
+    host    replication     all             127.0.0.1/32            trust
+    host    replication     all             ::1/128                 trust
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: scrum-user-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrum-user-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scrum-user-postgres
+  template:
+    metadata:
+      labels:
+        app: scrum-user-postgres
+    spec:
+      containers:
+      - name: scrum-user-postgres
+        image: sasabistrovic/scrum-user-postgres:1.0
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: x
+        volumeMounts:
+        - name: scrum-user-data
+          mountPath: /var/lib/postgresql/data
+        - name: postgres-config
+          mountPath: /etc/postgresql
+      volumes:
+      - name: scrum-user-data
+        persistentVolumeClaim:
+          claimName: scrum-user-data
+      - name: postgres-config
+        configMap:
+          name: postgres-config          
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrum-user-postgres
+spec:
+  selector:
+    app: scrum-user-postgres
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: LoadBalancer      
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scrum-user-pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scrum-user-pgadmin
+  template:
+    metadata:
+      labels:
+        app: scrum-user-pgadmin
+    spec:
+      containers:
+      - name: scrum-user-pgadmin
+        image: sasabistrovic/scrum-user-pgadmin:1.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+        - name: PGADMIN_DEFAULT_EMAIL
+          value: sasa.bistrovic@gmail.com
+        - name: PGADMIN_DEFAULT_PASSWORD
+          value: x
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scrum-user-pgadmin
+spec:
+  selector:
+    app: scrum-user-pgadmin
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer      
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-scrum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-scrum
+  template:
+    metadata:
+      labels:
+        app: spring-boot-scrum
+    spec:
+      containers:
+      - name: spring-boot-scrum
+        image: sasabistrovic/spring-boot-scrum:1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_SERVER
+          value: scrum-user-postgres
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: x
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-scrum
+spec:
+  selector:
+    app: spring-boot-scrum
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer      
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-boot-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spring-boot-user
+  template:
+    metadata:
+      labels:
+        app: spring-boot-user
+    spec:
+      containers:
+      - name: spring-boot-user
+        image: sasabistrovic/spring-boot-user:1.0
+        ports:
+        - containerPort: 8081
+        env:
+        - name: DB_SERVER
+          value: scrum-user-postgres
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          value: x
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: spring-boot-user
+spec:
+  selector:
+    app: spring-boot-user
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: LoadBalancer
